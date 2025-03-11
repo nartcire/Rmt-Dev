@@ -1,5 +1,6 @@
 import {
   BASE_API_URL,
+  getData,
   jobDetailsContentEl,
   jobListSearchEl,
 } from "../common.js";
@@ -48,12 +49,7 @@ const clickHandler = async (event) => {
   const id = jobItemEl.children[0].getAttribute("href");
 
   try {
-    const response = await fetch(`${BASE_API_URL}/jobs/${id}`);
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.description);
-    }
+    const data = await getData(`${BASE_API_URL}/jobs/${id}`);
 
     const { jobItem } = data;
     renderSpinner("job-details");
