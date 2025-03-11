@@ -29,8 +29,9 @@ const submitHandler = (event) => {
   fetch(`${BASE_API_URL}/jobs?search=${searchText}`)
     .then((res) => {
       if (!res.ok) {
-        console.log("Something went wrong");
-        return;
+        throw new Error(
+          "Resource issue (e.g. resource doesn't exist) or server issue"
+        );
       }
 
       return res.json();
@@ -42,7 +43,10 @@ const submitHandler = (event) => {
 
       renderJobList(jobItems);
     })
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      renderSpinner("search");
+      renderError(error.message);
+    });
 };
 
 searchFormEl.addEventListener("submit", submitHandler);
