@@ -1,4 +1,5 @@
 import {
+  BASE_API_URL,
   jobListSearchEl,
   numberEl,
   searchFormEl,
@@ -24,7 +25,7 @@ const submitHandler = (event) => {
   jobListSearchEl.innerHTML = "";
   renderSpinner("search");
 
-  fetch(`https://bytegrad.com/course-assets/js/2/api/jobs?search=${searchText}`)
+  fetch(`${BASE_API_URL}/jobs?search=${searchText}`)
     .then((res) => {
       if (!res.ok) {
         console.log("Something went wrong");
