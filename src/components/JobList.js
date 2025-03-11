@@ -34,7 +34,7 @@ const renderJobList = (jobItems) => {
   });
 };
 
-const clickHandler = (event) => {
+const clickHandler = async (event) => {
   event.preventDefault();
 
   const jobItemEl = event.target.closest(".job-item");
@@ -47,25 +47,21 @@ const clickHandler = (event) => {
   renderSpinner("job-details");
   const id = jobItemEl.children[0].getAttribute("href");
 
-  fetch(`${BASE_API_URL}/jobs/${id}`)
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(
-          "Resource issue (e.g. resource doesn't exist) or server issue"
-        );
-      }
+  try {
+    const response = await fetch(`${BASE_API_URL}/jobs/${id}`);
+    const data = await response.json();
 
-      return res.json();
-    })
-    .then((data) => {
-      const { jobItem } = data;
-      renderSpinner("job-details");
-      renderJobDetails(jobItem);
-    })
-    .catch((error) => {
-      renderSpinner("job-details");
-      renderError(error.message);
-    });
+    if (!response.ok) {
+      throw new Error(data.description);
+    }
+
+    const { jobItem } = data;
+    renderSpinner("job-details");
+    renderJobDetails(jobItem);
+  } catch (error) {
+    renderSpinner("job-details");
+    renderError(error.message);
+  }
 };
 
 jobListSearchEl.addEventListener("click", clickHandler);
