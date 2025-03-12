@@ -5,6 +5,7 @@ import {
   numberEl,
   searchFormEl,
   searchInputEl,
+  state,
 } from "../common.js";
 
 import renderError from "./Error.js";
@@ -31,10 +32,13 @@ const submitHandler = async (event) => {
     const data = await getData(`${BASE_API_URL}/jobs?search=${searchText}`);
 
     const { jobItems } = data;
+
+    state.searchJobItems = jobItems;
+
     renderSpinner("search");
     numberEl.textContent = jobItems.length;
 
-    renderJobList(jobItems);
+    renderJobList();
   } catch (error) {
     renderSpinner("search");
     renderError(error.message);

@@ -9,6 +9,10 @@ const clickHandler = (event) => {
   if (!clickedButtonEl) return;
 
   const recent = clickedButtonEl.className.includes("--recent") ? true : false;
+
+  if (recent) {
+  } else {
+  }
 };
 
 sortingEl.addEventListener("click", clickHandler);
