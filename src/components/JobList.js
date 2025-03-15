@@ -3,6 +3,7 @@ import {
   RESULTS_PER_PAGE,
   getData,
   jobDetailsContentEl,
+  jobListBookmarksEl,
   jobListSearchEl,
   state,
 } from "../common.js";
@@ -11,16 +12,24 @@ import renderError from "./Error.js";
 import renderJobDetails from "./JobDetails.js";
 import renderSpinner from "./Spinner.js";
 
-const renderJobList = () => {
-  jobListSearchEl.innerHTML = "";
+const renderJobList = (whichJobList = "search") => {
+  const jobListEl =
+    whichJobList === "search" ? jobListSearchEl : jobListBookmarksEl;
 
-  state.searchJobItems
-    .slice(
+  jobListEl.innerHTML = "";
+
+  let jobItems;
+  if (whichJobList === "search") {
+    jobItems = state.searchJobItems.slice(
       state.currentPage * RESULTS_PER_PAGE - RESULTS_PER_PAGE,
       state.currentPage * RESULTS_PER_PAGE
-    )
-    .forEach((jobItem) => {
-      const newJobItemHTML = `
+    );
+  } else if (whichJobList === "bookmarks") {
+    jobItems = state.bookmarkJobItems;
+  }
+
+  jobItems.forEach((jobItem) => {
+    const newJobItemHTML = `
       <li class="job-item ${
         state.activeJobItem.id === jobItem.id ? "job-item--active" : ""
       }">
@@ -48,8 +57,8 @@ const renderJobList = () => {
         </a>
       </li>`;
 
-      jobListSearchEl.insertAdjacentHTML("beforeend", newJobItemHTML);
-    });
+    jobListEl.insertAdjacentHTML("beforeend", newJobItemHTML);
+  });
 };
 
 const clickHandler = async (event) => {
@@ -57,17 +66,19 @@ const clickHandler = async (event) => {
 
   const jobItemEl = event.target.closest(".job-item");
   document
-    .querySelector(".job-item--active")
-    ?.classList.remove("job-item--active");
+    .querySelectorAll(".job-item--active")
+    .forEach((jobItemWithActiveClass) =>
+      jobItemWithActiveClass.classList.remove("job-item--active")
+    );
+
   jobItemEl.classList.add("job-item--active");
 
   jobDetailsContentEl.innerHTML = "";
   renderSpinner("job-details");
   const id = jobItemEl.children[0].getAttribute("href");
 
-  state.activeJobItem = state.searchJobItems.find(
-    (jobItem) => jobItem.id === +id
-  );
+  const allJobItems = [...state.searchJobItems, ...state.bookmarkJobItems];
+  state.activeJobItem = allJobItems.find((jobItem) => jobItem.id === +id);
 
   history.pushState(null, "", `/#${id}`);
 
@@ -84,5 +95,6 @@ const clickHandler = async (event) => {
 };
 
 jobListSearchEl.addEventListener("click", clickHandler);
+jobListBookmarksEl.addEventListener("click", clickHandler);
 
 export default renderJobList;

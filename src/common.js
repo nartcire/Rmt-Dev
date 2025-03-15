@@ -8,6 +8,7 @@ export const state = {
   searchJobItems: [],
   currentPage: 1,
   activeJobItem: {},
+  bookmarkJobItems: [],
 };
 
 // SELECTORS
