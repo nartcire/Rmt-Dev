@@ -1,6 +1,6 @@
 # RmtDev Project
 
-<img>
+<img width="1920" alt="Screenshot 2025-03-14 at 6 55 14 PM" src="https://github.com/user-attachments/assets/87e8e183-0c2d-4a9e-b6f7-7e5c4ebd8c34" />
 
 ## Motivation
 
@@ -19,7 +19,7 @@ The goal of this project was to make full use of the skills learned in HTML/CSS/
 
 ## Video
 
-<video>
+https://youtu.be/Ie0YQ5GXkWk
 
 ## Tech Stack
 
